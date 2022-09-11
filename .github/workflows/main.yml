@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
         
       - id: semver # https://github.com/marketplace/actions/semver-action
-        uses: gandarez/semver-action@vlatest 
+        uses: gandarez/semver-action@v1.0.1 
         
         # https://github.com/marketplace/actions/semver-action#auto-bump
         #^bugfix/.* or ^hotfix/.* - patch
