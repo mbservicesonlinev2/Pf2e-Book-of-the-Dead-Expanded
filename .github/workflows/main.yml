@@ -1,25 +1,39 @@
 on:
-  push: # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push
-    tags:
-    - 'v*' # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushbranchestagsbranches-ignoretags-ignore
+  pull_request:
+    branches: 
+    - master
+    types: [ closed ]
 
 name: Upload Release Assets
 
 jobs:
   build:
     name: Upload Release Asset
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Get the version
-        id: get_version
+        
+      - id: semver # https://github.com/marketplace/actions/semver-action
+        uses: gandarez/semver-action@vlatest 
+        
+        # https://github.com/marketplace/actions/semver-action#auto-bump
+        #^bugfix/.* or ^hotfix/.* - patch
+        #^doc/.* - build
+        #^feature/.* - minor
+        #^major/.* - major
+        #^misc/.* - build
+        # Produces ${{ steps.semver.outputs.semver_tag }}
+        
+      # Display the semver produced
+      - id: display
         run: |
-            echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-            echo ::set-output name=VERSION_NUMBER::${GITHUB_REF/refs\/tags\/v/}
+          echo "SemVer: $SEMVER"
+        env:
+          SEMVER: ${{ steps.semver.outputs.semver_tag }}
 
-      #Substitute the Manifest and Download URLs in the module.json
+      # Substitute the Manifest and Download URLs in the module.json
       - name: Substitute Manifest and Download Links For Versioned Ones
         id: sub_manifest_link_version
         uses: microsoft/variable-substitution@v1
@@ -28,19 +42,16 @@ jobs:
         env:
           version: ${{ steps.get_version.outputs.VERSION_NUMBER }}
           manifest: https://github.com/${{github.repository}}/releases/download/latest/module.json
-          download: https://github.com/${{github.repository}}/releases/download/${{steps.get_version.outputs.VERSION}}/pf2e-botd-ex.zip
-
-      - name: Zip files
-        run: zip -r pf2e-botd-ex * -x ".github/*"
-
-     # Create a release for this specific version
+          download: https://github.com/${{github.repository}}/releases/download/${{steps.semver.outputs.semver_tag}}/${{steps.semver.outputs.semver_tag}}.zip
+          
+      # Create a release for this specific version
       - name: Create Release
         id: create_version_release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.get_version.outputs.VERSION }}
-          name: Release ${{ steps.get_version.outputs.VERSION }}
+          tag: ${{steps.semver.outputs.semver_tag}}
+          name: Release ${{steps.semver.outputs.semver_tag}}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: './module.json,./pf2e-botd-ex.zip'
+          artifacts: './module.json,'
