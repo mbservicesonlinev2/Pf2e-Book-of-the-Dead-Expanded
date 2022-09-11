@@ -14,21 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - id: semver 
-        uses: IIlyichev/github-tag-action@v6.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_release_rules: "patch:patch,minor:minor,major:major"
-          
-      - id: display
-        run: |
-          echo "New tag: $N_TAG"
-          echo "New vers: $N_VER"
+        uses: codfish/semantic-release-action@v2
         env:
-          N_TAG: ${{ steps.semver.outputs.new_tag }}
-          N_VER: ${{ steps.semver.outputs.new_version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          
+      - run: echo "$OUTPUTS"
+        env:
+          OUTPUTS: ${{ toJson(steps.semantic.outputs) }}
 
       # Substitute the Manifest and Download URLs in the module.json
       #- name: Substitute Manifest and Download Links For Versioned Ones
