@@ -20,6 +20,7 @@ jobs:
         uses: hennejg/github-tag-action@v4.2.4 # https://github.com/hennejg/github-tag-action#bumping
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: "master"
           
       - id: display
         run: |
