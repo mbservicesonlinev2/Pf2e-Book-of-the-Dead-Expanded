@@ -16,13 +16,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - id: semver # https://github.com/marketplace/actions/semver-action
-        uses: stugit/semver-action@v1
+      - id: semver 
+        uses: hennejg/github-tag-action@v4.2.4 # https://github.com/hennejg/github-tag-action#bumping
         with:
-          DEFAULT_BUMP: 'patch'
-          WITH_V: true
-        # major, #minor, or #patch in the merge comment
-        # feature/ -> bumps minor instead of patch
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - id: display
+        run: |
+          echo "New tag: $N_TAG"
+          echo "New vers: $N_VER"
+        env:
+          N_TAG: ${{ steps.semver.outputs.new_tag }}
+          N_VER: ${{ steps.semver.outputs.new_version }}
 
       # Substitute the Manifest and Download URLs in the module.json
       #- name: Substitute Manifest and Download Links For Versioned Ones
