@@ -1,3 +1,3 @@
 # Pf2e-Book-of-the-Dead-Expanded
 
-Test workflow on version v2.0.7
+Test workflow on version v2.0.8
