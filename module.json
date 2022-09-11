@@ -92,7 +92,7 @@
       }
     }
   },
-  "url": "https://github.com/mbservicesonlinev2/Pf2e-Book-of-the-Dead-Expanded",
-  "manifest": "https://raw.githubusercontent.com/mbservicesonlinev2/Pf2e-Book-of-the-Dead-Expanded/master/module.json",
-  "download": "https://github.com/mbservicesonlinev2/Pf2e-Book-of-the-Dead-Expanded/archive/refs/tags/2.0.0.zip"
+  "url": "https://github.com/mbservicesonlinev2/pf2e-book-of-the-dead-expanded",
+  "manifest": "https://raw.githubusercontent.com/mbservicesonlinev2/pf2e-book-of-the-dead-expanded/master/module.json",
+  "download": "https://github.com/mbservicesonlinev2/pf2e-book-of-the-dead-expanded/archive/refs/tags/2.0.0.zip"
 }
