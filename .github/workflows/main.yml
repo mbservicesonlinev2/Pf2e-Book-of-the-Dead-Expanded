@@ -17,10 +17,9 @@ jobs:
         uses: actions/checkout@v2
         
       - id: semver 
-        uses: hennejg/github-tag-action@v4.2.4 # https://github.com/hennejg/github-tag-action#bumping
+        uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: "master"
           
       - id: display
         run: |
